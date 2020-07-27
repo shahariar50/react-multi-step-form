@@ -8,7 +8,6 @@ import {
   CardActions,
   IconButton,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -32,7 +31,7 @@ const Post = (props) => {
           <Typography
             component="h5"
             variant="h5"
-            title={post.title.length >= 28 && post.title}
+            title={post.title.length >= 28 ? post.title : ""}
           >
             {post.title.length >= 28
               ? `${post.title.substr(0, 28).trim()}...`
@@ -41,14 +40,14 @@ const Post = (props) => {
           <Typography variant="body1">
             {hidden ? `${post.body.substr(0, 100)}... ` : `${post.body} `}
             {hidden && (
-              <Link onClick={() => setHidden(false)} className={classes.read}>
+              <span onClick={() => setHidden(false)} className={classes.read}>
                 Read more
-              </Link>
+              </span>
             )}
             {!hidden && (
-              <Link onClick={() => setHidden(true)} className={classes.read}>
+              <span onClick={() => setHidden(true)} className={classes.read}>
                 Read less
-              </Link>
+              </span>
             )}
           </Typography>
         </CardContent>
