@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import {
   Grid,
   Card,
@@ -10,6 +12,8 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { deletePost, updatePosts } from "../../store/posts";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   read: {
@@ -21,6 +25,21 @@ const useStyles = makeStyles((theme) => ({
 
 const Post = (props) => {
   const [hidden, setHidden] = useState(true);
+  const dispatch = useDispatch();
+  const posts = useSelector((state) => state.entities.posts.list);
+
+  const handleDelete = async () => {
+    const oldPosts = [...posts];
+    dispatch(deletePost(post.id));
+
+    await axios
+      .delete("https://jsonplaceholder.typicode.com/posts/" + post.id)
+      .then()
+      .catch((error) => {
+        console.log(error.message);
+        dispatch(updatePosts(oldPosts));
+      });
+  };
 
   const { post } = props;
   const classes = useStyles();
@@ -38,13 +57,15 @@ const Post = (props) => {
               : post.title}
           </Typography>
           <Typography variant="body1">
-            {hidden ? `${post.body.substr(0, 100)}... ` : `${post.body} `}
-            {hidden && (
+            {post.body.length >= 100 && hidden
+              ? `${post.body.substr(0, 100)}... `
+              : `${post.body} `}
+            {post.body.length >= 100 && hidden && (
               <span onClick={() => setHidden(false)} className={classes.read}>
                 Read more
               </span>
             )}
-            {!hidden && (
+            {post.body.length >= 100 && !hidden && (
               <span onClick={() => setHidden(true)} className={classes.read}>
                 Read less
               </span>
@@ -52,10 +73,12 @@ const Post = (props) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <IconButton aria-label="edit post">
-            <EditIcon />
-          </IconButton>
-          <IconButton aria-label="delete post">
+          <Link to={`/edit-post/${post.id}`}>
+            <IconButton aria-label="edit post">
+              <EditIcon />
+            </IconButton>
+          </Link>
+          <IconButton aria-label="delete post" onClick={handleDelete}>
             <DeleteIcon />
           </IconButton>
         </CardActions>

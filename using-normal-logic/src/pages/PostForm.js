@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Grid,
@@ -9,8 +9,8 @@ import {
 } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { addPost } from "../store/posts";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePost } from "../store/posts";
 
 const useStyles = makeStyles((theme) => ({
   textInput: {
@@ -22,17 +22,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewPost = (props) => {
+const PostForm = (props) => {
   const [activeStep, setActiveStep] = useState(() => 1);
   const [submitType, setSubmitType] = useState("");
   const [data, setData] = useState();
   const dispatch = useDispatch();
+  const posts = useSelector((state) => state.entities.posts.list);
+
+  useEffect(() => {
+    const value = posts.filter(
+      (post) => post.id.toString() === props.match.params.id
+    );
+    setData(...value);
+  }, [posts]);
 
   const finalSubmit = async (values) => {
     await axios
-      .post("https://jsonplaceholder.typicode.com/posts", values)
+      .put(
+        `https://jsonplaceholder.typicode.com/posts/${props.match.params.id}`,
+        values
+      )
       .then((response) => {
-        dispatch(addPost(response.data));
+        dispatch(updatePost(response.data));
       });
     props.history.push("/");
   };
@@ -75,7 +86,7 @@ const NewPost = (props) => {
         <Grid item container className={classes.section}>
           <Grid item xs={12}>
             <form onSubmit={handleSubmit(onSubmit)}>
-              {activeStep === 1 && (
+              {activeStep === 1 && data?.title && (
                 <TextField
                   id="standard-basic"
                   fullWidth
@@ -84,10 +95,10 @@ const NewPost = (props) => {
                   variant="outlined"
                   className={classes.textInput}
                   inputRef={register({ required: true })}
-                  defaultValue={data?.title}
+                  defaultValue={data.title}
                 />
               )}
-              {activeStep === 2 && (
+              {activeStep === 2 && data?.body && (
                 <TextField
                   id="standard-basic"
                   fullWidth
@@ -143,4 +154,4 @@ const NewPost = (props) => {
   );
 };
 
-export default NewPost;
+export default PostForm;

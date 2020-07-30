@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Container, Typography, Grid, Button } from "@material-ui/core";
-import axios from "axios";
+import React from "react";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/styles";
-import Post from "./posts/Post";
 import { Link } from "react-router-dom";
+import { Container, Typography, Grid, Button } from "@material-ui/core";
+import Post from "./posts/Post";
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -13,16 +13,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Posts = () => {
-  const [posts, setPosts] = useState();
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await axios.get(
-        "https://jsonplaceholder.typicode.com/posts"
-      );
-      setPosts(data);
-    })();
-  }, []);
+  const posts = useSelector((state) => state.entities.posts.list);
 
   const classes = useStyles();
   return (

@@ -4,13 +4,18 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core";
+import configStore from "./store/configStore";
+import { Provider } from "react-redux";
 
+const store = configStore();
 const theme = createMuiTheme({});
 
 ReactDOM.render(
   <Router>
     <ThemeProvider theme={theme}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ThemeProvider>
   </Router>,
   document.getElementById("root")
