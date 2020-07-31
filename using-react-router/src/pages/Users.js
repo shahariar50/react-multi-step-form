@@ -1,8 +1,9 @@
 import React from "react";
-import { Typography, Container, Grid, Button } from "@material-ui/core";
 import { useSelector } from "react-redux";
-import User from "./users/User";
 import { makeStyles } from "@material-ui/styles";
+import { Link } from "react-router-dom";
+import { Typography, Container, Grid, Button } from "@material-ui/core";
+import UserCard from "../components/cards/UserCard";
 
 const useStyles = makeStyles((theme) => ({
   section: {
@@ -24,14 +25,16 @@ const Users = () => {
             </Typography>
           </Grid>
           <Grid container item xs={6} justify="flex-end">
-            <Button variant="outlined" color="primary">
-              New User
-            </Button>
+            <Link to="/new-user-form">
+              <Button variant="outlined" color="primary">
+                New User
+              </Button>
+            </Link>
           </Grid>
         </Grid>
         <Grid container item spacing={2} className={classes.section}>
           {users.map((user) => (
-            <User key={user.id} user={user} />
+            <UserCard key={user.id} data={user} />
           ))}
         </Grid>
       </Grid>

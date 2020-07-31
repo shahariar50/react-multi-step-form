@@ -3,6 +3,8 @@ import { Switch, Route } from "react-router-dom";
 import Users from "./pages/Users";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./store/users";
+import NewUserForm from "./pages/NewUserForm";
+import UserUpdateForm from "./pages/UserUpdateForm";
 
 function App() {
   const dispatch = useDispatch();
@@ -13,6 +15,8 @@ function App() {
 
   return (
     <Switch>
+      <Route path="/new-user-form" component={NewUserForm} />
+      <Route path="/edit-user/:id" component={UserUpdateForm} />
       <Route path="/" component={Users} />
     </Switch>
   );

@@ -16,14 +16,32 @@ const slice = createSlice({
       state.loading = false;
       state.list = actions.payload;
     },
+    updateUser: (state, actions) => {
+      state.list = state.list.map((user) =>
+        user.id !== actions.payload.id ? user : actions.payload
+      );
+    },
+    addUser: (state, actions) => {
+      state.list = [actions.payload, ...state.list];
+    },
     fetchFailed: (state, actions) => {
       state.loading = false;
-      console.log(actions);
+      console.log(actions.payload);
+    },
+    deleteUser: (state, actions) => {
+      state.list = state.list.filter((user) => user.id !== actions.payload.id);
     },
   },
 });
 
-export const { startLoading, updateUsers, fetchFailed } = slice.actions;
+export const {
+  startLoading,
+  updateUsers,
+  fetchFailed,
+  updateUser,
+  addUser,
+  deleteUser,
+} = slice.actions;
 export default slice.reducer;
 
 export const fetchUser = async (dispatch) => {
